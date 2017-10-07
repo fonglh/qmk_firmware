@@ -13,6 +13,9 @@
                                 }
 #endif
 
+#undef TAPPING_TOGGLE
+#define TAPPING_TOGGLE 2
+
 #define MUSIC_MASK (keycode != KC_NO)
 
 /*
@@ -40,3 +43,4 @@
 //#define MIDI_TONE_KEYCODE_OCTAVES 2
 
 #endif
+

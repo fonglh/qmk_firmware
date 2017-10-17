@@ -26,7 +26,9 @@ enum planck_keycodes {
 
 enum {
   TD_QUOTE_ENTER = 0,
-  TD_LOWER_NAV
+  TD_LOWER_NAV,
+  TD_COPY_CUT,
+  TD_PASTE
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -39,14 +41,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |-------+------+------+------+------+------|------+------+------+------+------+------|
  * | (/Lsft|   Z  |   X  |   C  |   V  |   B  |   N  |   M  |   ,  |   .  |   /  |)/Rsft|
  * |-------+------+------+------+------+------+------+------+------+------+------+------|
- * |Esc/Ctl| Num  | Alt  | GUI  |Low/Nav| Space| Bksp | Raise|  Up  |   [  |  ]   |Enter |
+ * |Esc/Ctl| Num  | Alt  | GUI  |Low/Nav|Space| Bksp | Raise|  Up  |CpyCut| Paste|Enter |
  * `-----------------------------------------------------------------------------------'
  */
 [_QWERTY] = {
   {KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_MINS},
   {CTL_T(KC_ESC),  KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, TD(TD_QUOTE_ENTER)},
   {KC_LSPO, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSPC},
-  {CTL_T(KC_ESC), TT(_NUM), KC_LALT, KC_LGUI, TD(TD_LOWER_NAV),   KC_SPC,  KC_BSPC,  RAISE,   KC_UP, KC_LBRC, KC_RBRC,   KC_ENT}
+  {CTL_T(KC_ESC), TT(_NUM), KC_LALT, KC_LGUI, TD(TD_LOWER_NAV),   KC_SPC,  KC_BSPC,  RAISE,   KC_UP, TD(TD_COPY_CUT), TD(TD_PASTE),   KC_ENT}
 },
 
 /* Dvorak
@@ -57,14 +59,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |-------+------+------+------+------+------|------+------+------+------+------+------|
  * | (/Lsft|   ;  |   Q  |   J  |   K  |   X  |   B  |   M  |   W  |   V  |   Z  |)/Rsft|
  * |-------+------+------+------+------+------+------+------+------+------+------+------|
- * |Esc/Ctl| Num  | Alt  | GUI  |Low/Nav|Space| Bksp    |Raise |  Up  |   [  |   ]  |Enter |
+ * |Esc/Ctl| Num  | Alt  | GUI  |Low/Nav|Space| Bksp |Raise |  Up  |CpyCut| Paste|Enter |
  * `-----------------------------------------------------------------------------------'
  */
 [_DVORAK] = {
   {KC_TAB,  KC_QUOT, KC_COMM, KC_DOT,  KC_P,    KC_Y,    KC_F,    KC_G,    KC_C,    KC_R,    KC_L,    KC_BSPC},
   {CTL_T(KC_ESC),  KC_A,    KC_O,    KC_E,    KC_U,    KC_I,    KC_D,    KC_H,    KC_T,    KC_N,    KC_S,    KC_SLSH},
   {KC_LSPO, KC_SCLN, KC_Q,    KC_J,    KC_K,    KC_X,    KC_B,    KC_M,    KC_W,    KC_V,    KC_Z, KC_RSPC},
-  {CTL_T(KC_ESC), TT(_NUM), KC_LALT, KC_LGUI, TD(TD_LOWER_NAV),   KC_SPC,  KC_BSPC,  RAISE,   KC_UP, KC_LBRC, KC_RBRC,   KC_ENT}
+  {CTL_T(KC_ESC), TT(_NUM), KC_LALT, KC_LGUI, TD(TD_LOWER_NAV),   KC_SPC,  KC_BSPC,  RAISE,   KC_UP, TD(TD_COPY_CUT), TD(TD_PASTE),   KC_ENT}
 },
 
 /* Lower
@@ -245,11 +247,81 @@ void dance_nav_reset(qk_tap_dance_state_t *state, void *user_data) {
   }
 }
 
+// Copy on single tap, Cut otherwise.
+// Sends Cmd or Ctrl depending on whether Mac or Win GUI/Alt option is enabled.
+void dance_copy_cut(qk_tap_dance_state_t *state, void *user_data) {
+  if (state->count == 1) {
+    // Copy
+    // Windows GUI/ALT layout, assume Windows copy shortcut.
+    if(keymap_config.swap_lalt_lgui == 1 && keymap_config.swap_ralt_rgui == 1) {
+      register_code(KC_LCTL);
+      register_code(KC_C);
+      unregister_code(KC_C);
+      unregister_code(KC_LCTL);
+    }
+    else {
+      register_code(KC_LGUI);
+      register_code(KC_C);
+      unregister_code(KC_C);
+      unregister_code(KC_LGUI);
+    }
+  } else {
+    // Cut
+    // Windows GUI/ALT layout, assume Windows cut shortcut.
+    if(keymap_config.swap_lalt_lgui == 1 && keymap_config.swap_ralt_rgui == 1) {
+      register_code(KC_LCTL);
+      register_code(KC_X);
+      unregister_code(KC_X);
+      unregister_code(KC_LCTL);
+    }
+    else {
+      register_code(KC_LGUI);
+      register_code(KC_X);
+      unregister_code(KC_X);
+      unregister_code(KC_LGUI);
+    }
+  }
+}
+
+// Normal paste on single tap, terminal paste shortcut if in Windows mode (For Linux VMs)
+void dance_paste(qk_tap_dance_state_t *state, void *user_data) {
+  if (state->count == 1) {
+    // Normal paste
+    // Windows GUI/ALT layout, assume Windows paste shortcut.
+    if(keymap_config.swap_lalt_lgui == 1 && keymap_config.swap_ralt_rgui == 1) {
+      register_code(KC_LCTL);
+      register_code(KC_V);
+      unregister_code(KC_V);
+      unregister_code(KC_LCTL);
+    }
+    else {
+      register_code(KC_LGUI);
+      register_code(KC_V);
+      unregister_code(KC_V);
+      unregister_code(KC_LGUI);
+    }
+  }
+  else {
+    // Windows GUI/ALT layout, double tapped, use terminal emulator paste shortcut
+    // Ctrl+Shift+V
+    if(keymap_config.swap_lalt_lgui == 1 && keymap_config.swap_ralt_rgui == 1) {
+      register_code(KC_LCTL);
+      register_code(KC_LSFT);
+      register_code(KC_V);
+      unregister_code(KC_V);
+      unregister_code(KC_LSFT);
+      unregister_code(KC_LCTL);
+    }
+  }
+}
+
 // Tap Dance Definitions
 qk_tap_dance_action_t tap_dance_actions[] = {
   //Tap once for quote, twice for Enter
   [TD_QUOTE_ENTER] = ACTION_TAP_DANCE_DOUBLE(KC_QUOT, KC_ENT),
-  [TD_LOWER_NAV] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_nav_on, dance_nav_reset)
+  [TD_LOWER_NAV] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_nav_on, dance_nav_reset),
+  [TD_COPY_CUT] = ACTION_TAP_DANCE_FN(dance_copy_cut),
+  [TD_PASTE] = ACTION_TAP_DANCE_FN(dance_paste)
 };
 
 // Supposed to use this with ACTION_FUNCTION(n) in a keymap but it didn't work.

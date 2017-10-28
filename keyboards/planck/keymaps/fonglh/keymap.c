@@ -28,7 +28,9 @@ enum {
   TD_QUOTE_ENTER = 0,
   TD_LOWER_NAV,
   TD_COPY_CUT,
-  TD_PASTE
+  TD_PASTE,
+  TD_OPEN_PAREN,
+  TD_CLOSE_PAREN
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -47,7 +49,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [_QWERTY] = {
   {KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_MINS},
   {CTL_T(KC_ESC),  KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, TD(TD_QUOTE_ENTER)},
-  {KC_LSPO, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSPC},
+  {TD(TD_OPEN_PAREN), KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, TD(TD_CLOSE_PAREN)},
   {CTL_T(KC_ESC), TT(_NUM), KC_LALT, KC_LGUI, TD(TD_LOWER_NAV),   KC_SPC,  KC_BSPC,  RAISE,   KC_UP, TD(TD_COPY_CUT), TD(TD_PASTE),   KC_ENT}
 },
 
@@ -65,7 +67,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [_DVORAK] = {
   {KC_TAB,  KC_QUOT, KC_COMM, KC_DOT,  KC_P,    KC_Y,    KC_F,    KC_G,    KC_C,    KC_R,    KC_L,    KC_BSPC},
   {CTL_T(KC_ESC),  KC_A,    KC_O,    KC_E,    KC_U,    KC_I,    KC_D,    KC_H,    KC_T,    KC_N,    KC_S,    KC_SLSH},
-  {KC_LSPO, KC_SCLN, KC_Q,    KC_J,    KC_K,    KC_X,    KC_B,    KC_M,    KC_W,    KC_V,    KC_Z, KC_RSPC},
+  {TD(TD_OPEN_PAREN), KC_SCLN, KC_Q,    KC_J,    KC_K,    KC_X,    KC_B,    KC_M,    KC_W,    KC_V,    KC_Z, TD(TD_CLOSE_PAREN)},
   {CTL_T(KC_ESC), TT(_NUM), KC_LALT, KC_LGUI, TD(TD_LOWER_NAV),   KC_SPC,  KC_BSPC,  RAISE,   KC_UP, TD(TD_COPY_CUT), TD(TD_PASTE),   KC_ENT}
 },
 
@@ -315,13 +317,69 @@ void dance_paste(qk_tap_dance_state_t *state, void *user_data) {
   }
 }
 
+void dance_lsft_finished(qk_tap_dance_state_t *state, void *user_data) {
+  if (state->pressed) {
+    register_code(KC_LSFT);
+  }
+  else {
+    switch(state->count) {
+      case 1:
+        register_code(KC_LSFT);
+        register_code(KC_9);
+        break;
+      case 2:
+        register_code(KC_LBRC);
+        break;
+      case 3:
+        register_code(KC_LSFT);
+        register_code(KC_LBRC);
+        break;
+    }
+  }
+}
+
+void dance_lsft_reset(qk_tap_dance_state_t *state, void *user_data) {
+  unregister_code(KC_9);
+  unregister_code(KC_LBRC);
+  unregister_code(KC_LSFT);
+}
+
+void dance_rsft_finished(qk_tap_dance_state_t *state, void *user_data) {
+  if (state->pressed) {
+    register_code(KC_RSFT);
+  }
+  else {
+    switch(state->count) {
+      case 1:
+        register_code(KC_RSFT);
+        register_code(KC_0);
+        break;
+      case 2:
+        register_code(KC_RBRC);
+        break;
+      case 3:
+        register_code(KC_RSFT);
+        register_code(KC_RBRC);
+        break;
+    }
+  }
+}
+
+void dance_rsft_reset(qk_tap_dance_state_t *state, void *user_data) {
+  unregister_code(KC_0);
+  unregister_code(KC_RBRC);
+  unregister_code(KC_RSFT);
+}
+
 // Tap Dance Definitions
 qk_tap_dance_action_t tap_dance_actions[] = {
   //Tap once for quote, twice for Enter
   [TD_QUOTE_ENTER] = ACTION_TAP_DANCE_DOUBLE(KC_QUOT, KC_ENT),
   [TD_LOWER_NAV] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_nav_on, dance_nav_reset),
   [TD_COPY_CUT] = ACTION_TAP_DANCE_FN(dance_copy_cut),
-  [TD_PASTE] = ACTION_TAP_DANCE_FN(dance_paste)
+  [TD_PASTE] = ACTION_TAP_DANCE_FN(dance_paste),
+  [TD_OPEN_PAREN] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_lsft_finished, dance_lsft_reset),
+  [TD_CLOSE_PAREN] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_rsft_finished, dance_rsft_reset)
 };
 
 // Supposed to use this with ACTION_FUNCTION(n) in a keymap but it didn't work.

@@ -28,63 +28,63 @@ enum {
   TD_LOWER_NAV = 0,
   TD_COPY_CUT,
   TD_PASTE,
-  TD_OPEN_PAREN,
-  TD_CLOSE_PAREN
+  TD_OPEN_BRC,
+  TD_CLOSE_BRC
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 /* Qwerty
- * ,-----------------------------------------------------------------------------------.
+ * ,------------------------------------------------------------------------------------.
  * | Tab   |   Q  |   W  |   E  |   R  |   T  |   Y  |   U  |   I  |   O  |   P  |   -  |
  * |-------+------+------+------+------+-------------+------+------+------+------+------|
- * |Esc/Ctl|   A  |   S  |   D  |   F  |   G  |   H  |   J  |   K  |   L  |   ;  |  Ent |
+ * |Esc/Ctl|   A  |   S  |   D  |   F  |   G  |   H  |   J  |   K  |   L  |   ;  |  '   |
  * |-------+------+------+------+------+------|------+------+------+------+------+------|
  * | (/Lsft|   Z  |   X  |   C  |   V  |   B  |   N  |   M  |   ,  |   .  |   /  |)/Rsft|
  * |-------+------+------+------+------+------+------+------+------+------+------+------|
- * |Esc/Ctl| Num  | Alt  | GUI  |Low/Nav|Space| Bksp | Raise|  Up  |CpyCut| Paste|Enter |
+ * |Esc/Ctl| Num  | Alt  | GUI  |Low/Nav|Space| Bksp | Raise|Enter |CpyCut| Paste|Enter |
  * `------------------------------------------------------------------------------------'
  */
 [_QWERTY] = {
   {KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_MINS},
-  {CTL_T(KC_ESC),  KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_ENT},
-  {TD(TD_OPEN_PAREN), KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, TD(TD_CLOSE_PAREN)},
-  {CTL_T(KC_ESC), TT(_NUM), KC_LALT, KC_LGUI, TD(TD_LOWER_NAV),   KC_SPC,  KC_BSPC,  RAISE,   KC_UP, TD(TD_COPY_CUT), TD(TD_PASTE),   KC_ENT}
+  {CTL_T(KC_ESC),  KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT},
+  {KC_LSPO, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSPC},
+  {CTL_T(KC_ESC), TT(_NUM), KC_LALT, KC_LGUI, TD(TD_LOWER_NAV),   KC_SPC,  KC_BSPC,  RAISE,   KC_ENT, TD(TD_COPY_CUT), TD(TD_PASTE), KC_ENT}
 },
 
 /* Dvorak
- * ,-----------------------------------------------------------------------------------.
+ * ,------------------------------------------------------------------------------------.
  * | Tab   |   "  |   ,  |   .  |   P  |   Y  |   F  |   G  |   C  |   R  |   L  | Bksp |
  * |-------+------+------+------+------+-------------+------+------+------+------+------|
  * |Esc/Ctl|   A  |   O  |   E  |   U  |   I  |   D  |   H  |   T  |   N  |   S  |  /   |
  * |-------+------+------+------+------+------|------+------+------+------+------+------|
  * | (/Lsft|   ;  |   Q  |   J  |   K  |   X  |   B  |   M  |   W  |   V  |   Z  |)/Rsft|
  * |-------+------+------+------+------+------+------+------+------+------+------+------|
- * |Esc/Ctl| Num  | Alt  | GUI  |Low/Nav|Space| Bksp |Raise |  Up  |CpyCut| Paste|Enter |
+ * |Esc/Ctl| Num  | Alt  | GUI  |Low/Nav|Space| Bksp |Raise |Enter |CpyCut| Paste|Enter |
  * `------------------------------------------------------------------------------------'
  */
 [_DVORAK] = {
   {KC_TAB,  KC_QUOT, KC_COMM, KC_DOT,  KC_P,    KC_Y,    KC_F,    KC_G,    KC_C,    KC_R,    KC_L,    KC_BSPC},
   {CTL_T(KC_ESC),  KC_A,    KC_O,    KC_E,    KC_U,    KC_I,    KC_D,    KC_H,    KC_T,    KC_N,    KC_S,    KC_SLSH},
-  {TD(TD_OPEN_PAREN), KC_SCLN, KC_Q,    KC_J,    KC_K,    KC_X,    KC_B,    KC_M,    KC_W,    KC_V,    KC_Z, TD(TD_CLOSE_PAREN)},
-  {CTL_T(KC_ESC), TT(_NUM), KC_LALT, KC_LGUI, TD(TD_LOWER_NAV),   KC_SPC,  KC_BSPC,  RAISE,   KC_UP, TD(TD_COPY_CUT), TD(TD_PASTE),   KC_ENT}
+  {KC_LSPO, KC_SCLN, KC_Q,    KC_J,    KC_K,    KC_X,    KC_B,    KC_M,    KC_W,    KC_V,    KC_Z, KC_RSPC},
+  {CTL_T(KC_ESC), TT(_NUM), KC_LALT, KC_LGUI, TD(TD_LOWER_NAV),   KC_SPC,  KC_BSPC,  RAISE,   KC_ENT, TD(TD_COPY_CUT), TD(TD_PASTE),   KC_ENT}
 },
 
 /* Lower
  * ,-----------------------------------------------------------------------------------.
- * |   ~  |   !  |   @  |   #  |   $  |   %  |   ^  |   &  |   *  |   [  |   ]  |  =   |
+ * |   ~  |   !  |   @  |   #  |   $  |   %  |   ^  |   &  |   *  |   (  |   )  |  =   |
  * |------+------+------+------+------+-------------+------+------+------+------+------|
- * |      |  F1  |  F2  |  F3  |  F4  |  F5  |  F6  |   _  |   +  |   {  |   '  |  \   |
+ * |      |  F1  |  F2  |  F3  |  F4  |  F5  |  F6  |   [  |   ]  |   {  |   }  |  \   |
  * |------+------+------+------+------+------|------+------+------+------+------+------|
- * |      |  F7  |  F8  |  F9  |  F10 |  F11 |  F12 |ISO ~ |ISO | | Home | End  |      |
+ * |St/[/{|  F7  |  F8  |  F9  |  F10 |  F11 |  F12 |ISO ~ |ISO | |      |      |St/]/}|
  * |------+------+------+------+------+------+------+------+------+------+------+------|
  * |      |      |      |      |      |      | Del  |      | Next | Vol- | Vol+ | Play |
  * `-----------------------------------------------------------------------------------'
  */
 [_LOWER] = {
-  {KC_TILD, KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC, KC_CIRC, KC_AMPR,    KC_ASTR,    KC_LBRC, KC_RBRC, KC_EQL},
-  {_______,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_UNDS,    KC_PLUS,    KC_LCBR, KC_QUOT, KC_BSLS},
-  {TD(TD_CLOSE_PAREN), KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,  S(KC_NUHS), S(KC_NUBS), KC_HOME, KC_END,  _______},
+  {KC_TILD, KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC, KC_CIRC, KC_AMPR,    KC_ASTR,    KC_LPRN, KC_RPRN, KC_EQL},
+  {_______,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_LBRC,    KC_RBRC,    KC_LCBR, KC_RCBR, KC_BSLS},
+  {TD(TD_OPEN_BRC), KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,  S(KC_NUHS), S(KC_NUBS), _______, _______,  TD(TD_CLOSE_BRC)},
   {_______, _______, _______, _______, _______, _______, KC_DEL, _______,    KC_MNXT,    KC_VOLD, KC_VOLU, KC_MPLY}
 },
 
@@ -92,7 +92,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * ,-----------------------------------------------------------------------------------.
  * |   `  |   1  |   2  |   3  |   4  |   5  |   6  |   7  |   8  |   9  |   0  |  +   |
  * |------+------+------+------+------+-------------+------+------+------+------+------|
- * | Del  |  F1  |  F2  |  F3  |  F4  |  F5  |  F6  |   -  |   =  |   }  |   "  |  |   |
+ * | Del  |  F1  |  F2  |  F3  |  F4  |  F5  |  F6  |      |      |      |      |  |   |
  * |------+------+------+------+------+------|------+------+------+------+------+------|
  * |      |  F7  |  F8  |  F9  |  F10 |  F11 |  F12 |ISO # |ISO / |Pg Up |Pg Dn |      |
  * |------+------+------+------+------+------+------+------+------+------+------+------|
@@ -101,14 +101,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
 [_RAISE] = {
   {KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_PLUS},
-  {KC_DEL,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_MINS, KC_EQL,  KC_RBRC, KC_DQT, KC_PIPE},
+  {KC_DEL,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   _______, _______,  _______, _______, KC_PIPE},
   {_______, KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,  KC_NUHS, KC_NUBS, KC_PGUP, KC_PGDN, _______},
   {_______, _______, _______, _______, _______, _______, _______, _______, KC_MNXT, KC_VOLD, KC_VOLU, KC_MPLY}
 },
 
 /* Nav -- For Ctrl-<number> tab navigation, consistent with tab switching for macs.
  * ,-----------------------------------------------------------------------------------.
- * |      |Ctl-1 |Ctl-2 |Ctl-3 |Ctl-4 |Ctl-5 | Ctl-6 |Ctl-7 |Ctl-8 | Ctl-9|      |      |
+ * |Alt-` |Ctl-1 |Ctl-2 |Ctl-3 |Ctl-4 |Ctl-5 | Ctl-6 |Ctl-7 |Ctl-8 | Ctl-9|      |      |
  * |------+------+------+------+------+--------------+------+------+------+------+------|
  * |      |      |      |      |      |      |       |      |      |      |      |      |
  * |------+------+------+------+------+------|-------+------+------+------+------+------|
@@ -323,13 +323,9 @@ void dance_lsft_finished(qk_tap_dance_state_t *state, void *user_data) {
   else {
     switch(state->count) {
       case 1:
-        register_code(KC_LSFT);
-        register_code(KC_9);
-        break;
-      case 2:
         register_code(KC_LBRC);
         break;
-      case 3:
+      case 2:
         register_code(KC_LSFT);
         register_code(KC_LBRC);
         break;
@@ -338,7 +334,6 @@ void dance_lsft_finished(qk_tap_dance_state_t *state, void *user_data) {
 }
 
 void dance_lsft_reset(qk_tap_dance_state_t *state, void *user_data) {
-  unregister_code(KC_9);
   unregister_code(KC_LBRC);
   unregister_code(KC_LSFT);
 }
@@ -350,13 +345,9 @@ void dance_rsft_finished(qk_tap_dance_state_t *state, void *user_data) {
   else {
     switch(state->count) {
       case 1:
-        register_code(KC_RSFT);
-        register_code(KC_0);
-        break;
-      case 2:
         register_code(KC_RBRC);
         break;
-      case 3:
+      case 2:
         register_code(KC_RSFT);
         register_code(KC_RBRC);
         break;
@@ -365,7 +356,6 @@ void dance_rsft_finished(qk_tap_dance_state_t *state, void *user_data) {
 }
 
 void dance_rsft_reset(qk_tap_dance_state_t *state, void *user_data) {
-  unregister_code(KC_0);
   unregister_code(KC_RBRC);
   unregister_code(KC_RSFT);
 }
@@ -375,34 +365,6 @@ qk_tap_dance_action_t tap_dance_actions[] = {
   [TD_LOWER_NAV] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_nav_on, dance_nav_reset),
   [TD_COPY_CUT] = ACTION_TAP_DANCE_FN(dance_copy_cut),
   [TD_PASTE] = ACTION_TAP_DANCE_FN(dance_paste),
-  [TD_OPEN_PAREN] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_lsft_finished, dance_lsft_reset),
-  [TD_CLOSE_PAREN] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_rsft_finished, dance_rsft_reset)
+  [TD_OPEN_BRC] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_lsft_finished, dance_lsft_reset),
+  [TD_CLOSE_BRC] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_rsft_finished, dance_rsft_reset)
 };
-
-// Supposed to use this with ACTION_FUNCTION(n) in a keymap but it didn't work.
-// If this works, can get rid of the NAV case in `process_record_user`.
-void action_function(keyrecord_t *record, uint8_t id, uint8_t opt) {
-  bool use_navmac = true;
-
-  // Compare to MAGIC_SWAP_ALT_GUI and MAGIC_UNSWAP_ALT_GUI configs,
-  // set in:quantum/quantum.c
-  if(keymap_config.swap_lalt_lgui == 1 && keymap_config.swap_ralt_rgui == 1) {
-    use_navmac = false;
-  }
-
-  switch(id) {
-    case 0:
-      if (record->event.pressed) {
-        if (use_navmac) {
-          layer_on(_NAVMAC);
-        }
-        else {
-          layer_on(_NAV);
-        }
-      } else {
-        layer_off(_NAV);
-        layer_off(_NAVMAC);
-      }
-      break;
-  }
-}

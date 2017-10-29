@@ -18,7 +18,7 @@ enum planck_keycodes {
   QWERTY = SAFE_RANGE,
   DVORAK,
   LOWER,
-  RAISE,
+  RAISE = LT(_RAISE, KC_ENT),
   NAV,
   NAVMAC,
   NUM
@@ -42,14 +42,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |-------+------+------+------+------+------|------+------+------+------+------+------|
  * | (/Lsft|   Z  |   X  |   C  |   V  |   B  |   N  |   M  |   ,  |   .  |   /  |)/Rsft|
  * |-------+------+------+------+------+------+------+------+------+------+------+------|
- * |Esc/Ctl| Num  | Alt  | GUI  |Low/Nav|Space| Bksp | Raise|Enter |CpyCut| Paste|Enter |
+ * |Esc/Ctl| Num  | Alt  | GUI  |Low/Nav|Space| Bksp|Rai/Ent|  Del |CpyCut| Paste|Enter |
  * `------------------------------------------------------------------------------------'
  */
 [_QWERTY] = {
   {KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_MINS},
   {CTL_T(KC_ESC),  KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT},
   {KC_LSPO, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSPC},
-  {CTL_T(KC_ESC), TT(_NUM), KC_LALT, KC_LGUI, TD(TD_LOWER_NAV),   KC_SPC,  KC_BSPC,  RAISE,   KC_ENT, TD(TD_COPY_CUT), TD(TD_PASTE), KC_ENT}
+  {CTL_T(KC_ESC), TT(_NUM), KC_LALT, KC_LGUI, TD(TD_LOWER_NAV),   KC_SPC,  KC_BSPC,  RAISE,   KC_DEL, TD(TD_COPY_CUT), TD(TD_PASTE), KC_ENT}
 },
 
 /* Dvorak
@@ -60,14 +60,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |-------+------+------+------+------+------|------+------+------+------+------+------|
  * | (/Lsft|   ;  |   Q  |   J  |   K  |   X  |   B  |   M  |   W  |   V  |   Z  |)/Rsft|
  * |-------+------+------+------+------+------+------+------+------+------+------+------|
- * |Esc/Ctl| Num  | Alt  | GUI  |Low/Nav|Space| Bksp |Raise |Enter |CpyCut| Paste|Enter |
+ * |Esc/Ctl| Num  | Alt  | GUI  |Low/Nav|Space| Bksp|Rai/Ent|  Del |CpyCut| Paste|Enter |
  * `------------------------------------------------------------------------------------'
  */
 [_DVORAK] = {
   {KC_TAB,  KC_QUOT, KC_COMM, KC_DOT,  KC_P,    KC_Y,    KC_F,    KC_G,    KC_C,    KC_R,    KC_L,    KC_BSPC},
   {CTL_T(KC_ESC),  KC_A,    KC_O,    KC_E,    KC_U,    KC_I,    KC_D,    KC_H,    KC_T,    KC_N,    KC_S,    KC_SLSH},
   {KC_LSPO, KC_SCLN, KC_Q,    KC_J,    KC_K,    KC_X,    KC_B,    KC_M,    KC_W,    KC_V,    KC_Z, KC_RSPC},
-  {CTL_T(KC_ESC), TT(_NUM), KC_LALT, KC_LGUI, TD(TD_LOWER_NAV),   KC_SPC,  KC_BSPC,  RAISE,   KC_ENT, TD(TD_COPY_CUT), TD(TD_PASTE),   KC_ENT}
+  {CTL_T(KC_ESC), TT(_NUM), KC_LALT, KC_LGUI, TD(TD_LOWER_NAV),   KC_SPC,  KC_BSPC,  RAISE,   KC_DEL, TD(TD_COPY_CUT), TD(TD_PASTE),   KC_ENT}
 },
 
 /* Lower
@@ -208,8 +208,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         layer_off(_LOWER);
         update_tri_layer(_LOWER, _RAISE, _ADJUST);
       }
-      // https://www.reddit.com/r/olkb/comments/4x3dei/hack_too_ugly_to_live/
-      // link here is for reference, currently not used.
       return false;
       break;
     case RAISE:
@@ -220,7 +218,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         layer_off(_RAISE);
         update_tri_layer(_LOWER, _RAISE, _ADJUST);
       }
-      return false;
+      // Commented out so the Raise key can still enter the Adjust layer.
+      // https://www.reddit.com/r/olkb/comments/4x3dei/hack_too_ugly_to_live/
+      // return false;
       break;
   }
   return true;

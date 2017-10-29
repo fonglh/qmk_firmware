@@ -76,7 +76,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |------+------+------+------+------+-------------+------+------+------+------+------|
  * |      |  F1  |  F2  |  F3  |  F4  |  F5  |  F6  |   [  |   ]  |   {  |   }  |  \   |
  * |------+------+------+------+------+------|------+------+------+------+------+------|
- * |St/[/{|  F7  |  F8  |  F9  |  F10 |  F11 |  F12 |ISO ~ |ISO | |      |      |St/]/}|
+ * | [/{  |  F7  |  F8  |  F9  |  F10 |  F11 |  F12 |ISO ~ |ISO | |      |      |  ]/} |
  * |------+------+------+------+------+------+------+------+------+------+------+------|
  * |      |      |      |      |      |      | Del  |      | Next | Vol- | Vol+ | Play |
  * `-----------------------------------------------------------------------------------'
@@ -94,7 +94,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |------+------+------+------+------+-------------+------+------+------+------+------|
  * | Del  |  F1  |  F2  |  F3  |  F4  |  F5  |  F6  |      |      |      |      |  |   |
  * |------+------+------+------+------+------|------+------+------+------+------+------|
- * |      |  F7  |  F8  |  F9  |  F10 |  F11 |  F12 |ISO # |ISO / |Pg Up |Pg Dn |      |
+ * |      |  F7  |  F8  |  F9  |  F10 |  F11 |  F12 |ISO # |ISO / |Pg Up |Pg Dn | ]/}  |
  * |------+------+------+------+------+------+------+------+------+------+------+------|
  * |      |      |      |      |      |             |      | Next | Vol- | Vol+ | Play |
  * `-----------------------------------------------------------------------------------'
@@ -102,7 +102,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [_RAISE] = {
   {KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_PLUS},
   {KC_DEL,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   _______, _______,  _______, _______, KC_PIPE},
-  {_______, KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,  KC_NUHS, KC_NUBS, KC_PGUP, KC_PGDN, _______},
+  {_______, KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,  KC_NUHS, KC_NUBS, KC_PGUP, KC_PGDN, TD(TD_CLOSE_BRC)},
   {_______, _______, _______, _______, _______, _______, _______, _______, KC_MNXT, KC_VOLD, KC_VOLU, KC_MPLY}
 },
 
@@ -316,55 +316,11 @@ void dance_paste(qk_tap_dance_state_t *state, void *user_data) {
   }
 }
 
-void dance_lsft_finished(qk_tap_dance_state_t *state, void *user_data) {
-  if (state->pressed) {
-    register_code(KC_LSFT);
-  }
-  else {
-    switch(state->count) {
-      case 1:
-        register_code(KC_LBRC);
-        break;
-      case 2:
-        register_code(KC_LSFT);
-        register_code(KC_LBRC);
-        break;
-    }
-  }
-}
-
-void dance_lsft_reset(qk_tap_dance_state_t *state, void *user_data) {
-  unregister_code(KC_LBRC);
-  unregister_code(KC_LSFT);
-}
-
-void dance_rsft_finished(qk_tap_dance_state_t *state, void *user_data) {
-  if (state->pressed) {
-    register_code(KC_RSFT);
-  }
-  else {
-    switch(state->count) {
-      case 1:
-        register_code(KC_RBRC);
-        break;
-      case 2:
-        register_code(KC_RSFT);
-        register_code(KC_RBRC);
-        break;
-    }
-  }
-}
-
-void dance_rsft_reset(qk_tap_dance_state_t *state, void *user_data) {
-  unregister_code(KC_RBRC);
-  unregister_code(KC_RSFT);
-}
-
 // Tap Dance Definitions
 qk_tap_dance_action_t tap_dance_actions[] = {
   [TD_LOWER_NAV] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_nav_on, dance_nav_reset),
   [TD_COPY_CUT] = ACTION_TAP_DANCE_FN(dance_copy_cut),
   [TD_PASTE] = ACTION_TAP_DANCE_FN(dance_paste),
-  [TD_OPEN_BRC] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_lsft_finished, dance_lsft_reset),
-  [TD_CLOSE_BRC] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_rsft_finished, dance_rsft_reset)
+  [TD_OPEN_BRC] = ACTION_TAP_DANCE_DOUBLE(KC_LBRC, KC_LCBR),
+  [TD_CLOSE_BRC] = ACTION_TAP_DANCE_DOUBLE(KC_RBRC, KC_RCBR)
 };

@@ -315,45 +315,28 @@ void dance_paste(qk_tap_dance_state_t *state, void *user_data) {
   }
 }
 
-// Fill login on tap, show 1Password mini on double tap
+// Open 1Password X on tap.
+// Windows: Ctrl + Shift + X
+// Mac: Cmd + Shift + X
 void dance_one_password(qk_tap_dance_state_t *state, void *user_data) {
-  if (state->count == 1) {
-    // Windows GUI/Alt layout
-    // Ctrl + Backslash
-    if(keymap_config.swap_lalt_lgui == 1 && keymap_config.swap_ralt_rgui == 1) {
-      register_code(KC_LCTL);
-      register_code(KC_BSLS);
-      unregister_code(KC_BSLS);
-      unregister_code(KC_LCTL);
-    }
-    // Cmd + Backslash
-    else {
-      register_code(KC_LGUI);
-      register_code(KC_BSLS);
-      unregister_code(KC_BSLS);
-      unregister_code(KC_LGUI);
-    }
+  // Windows GUI/Alt layout
+  // Ctrl + Shift + X
+  if(keymap_config.swap_lalt_lgui == 1 && keymap_config.swap_ralt_rgui == 1) {
+    register_code(KC_LCTL);
+    register_code(KC_LSFT);
+    register_code(KC_X);
+    unregister_code(KC_X);
+    unregister_code(KC_LSFT);
+    unregister_code(KC_LCTL);
   }
+  // Cmd + Shift + X
   else {
-    // Windows GUI/Alt layout.
-    // Ctrl + Alt + Backslash 
-    if(keymap_config.swap_lalt_lgui == 1 && keymap_config.swap_ralt_rgui == 1) {
-      register_code(KC_LCTL);
-      register_code(KC_LALT);
-      register_code(KC_BSLS);
-      unregister_code(KC_BSLS);
-      unregister_code(KC_LALT);
-      unregister_code(KC_LCTL);
-    }
-    // Cmd + Option + Backslash
-    else {
-      register_code(KC_LGUI);
-      register_code(KC_LALT);
-      register_code(KC_BSLS);
-      unregister_code(KC_BSLS);
-      unregister_code(KC_LALT);
-      unregister_code(KC_LGUI);
-    }
+    register_code(KC_LGUI);
+    register_code(KC_LSFT);
+    register_code(KC_X);
+    unregister_code(KC_X);
+    unregister_code(KC_LSFT);
+    unregister_code(KC_LGUI);
   }
 }
 
